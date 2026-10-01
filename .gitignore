@@ -1,4 +1,4 @@
-.dockerignore
 .terraform/
 *.tfstate
 *.tfstate.*
+.DS_Store
