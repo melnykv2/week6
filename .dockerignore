@@ -1,0 +1,28 @@
+# --- Secrets & state: must never end up in an image ---
+**/*.tfstate
+**/*.tfstate.*
+**/.terraform/
+**/*.tfvars
+**/.env
+hc/local_settings.py
+
+# --- VCS, OS and editor junk ---
+.git
+.github
+**/.DS_Store
+
+# --- Python caches & local data ---
+**/__pycache__
+**/*.pyc
+*.sqlite
+static-collected
+
+# --- Infra & Docker files (not app code) ---
+terraform-aws-ecs-fargate
+Dockerfile
+.dockerignore
+
+# --- Dev-only tooling the running app never reads ---
+stuff
+requirements-dev.txt
+mypy.ini
