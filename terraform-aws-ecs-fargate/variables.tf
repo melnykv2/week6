@@ -25,3 +25,21 @@ variable "private_subnet_cidrs" {
   type    = list(string)
   default = ["10.0.11.0/24", "10.0.22.0/24"]
 }
+
+variable "db_name" {
+  type        = string
+  description = "Database name"
+  default     = "hc"
+}
+
+variable "db_username" {
+  type        = string
+  description = "Database username"
+  default     = "hc"
+}
+
+variable "db_instance_class" {
+  type        = string
+  description = "Database instance class"
+  default     = "db.t4g.micro"
+}
