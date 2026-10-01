@@ -1,0 +1,4 @@
+.dockerignore
+.terraform/
+*.tfstate
+*.tfstate.*
