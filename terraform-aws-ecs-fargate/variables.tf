@@ -41,5 +41,11 @@ variable "db_username" {
 variable "db_instance_class" {
   type        = string
   description = "Database instance class"
-  default     = "db.t4g.micro"
+  default     = "db.t3.micro"
+}
+
+variable "image_tag" {
+  type        = string
+  description = "Image tag in ECR to deploy"
+  default     = "v3"
 }
