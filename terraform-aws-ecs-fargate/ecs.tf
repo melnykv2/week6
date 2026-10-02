@@ -7,32 +7,6 @@ resource "aws_ecr_repository" "app" {
   force_delete = true
 }
 
-resource "aws_security_group" "ecs" {
-  name        = "${var.project_name}-ecs-sg"
-  description = "Security group for the app"
-  vpc_id      = aws_vpc.app.id
-  tags = {
-    Name = "${var.project_name}-ecs-sg"
-  }
-
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ecs-ingress" {
-  security_group_id            = aws_security_group.ecs.id
-  ip_protocol                  = "tcp"
-  from_port                    = 8000
-  to_port                      = 8000
-  referenced_security_group_id = aws_security_group.alb.id
-  description                  = "Allow ingress from port 8000"
-}
-
-resource "aws_vpc_security_group_egress_rule" "ecs-egress" {
-  security_group_id = aws_security_group.ecs.id
-  cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = -1
-  description       = "Allow egress to all ports"
-}
-
 resource "aws_ecs_cluster" "app" {
   name = "${var.project_name}-cluster"
   tags = {
@@ -49,50 +23,6 @@ resource "aws_ssm_parameter" "django_secret_key" {
   name  = "/${var.project_name}/SECRET_KEY"
   type  = "SecureString"
   value = random_password.django_secret_key.result
-}
-
-data "aws_iam_policy_document" "ecs_assume" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "ecs" {
-  name               = "${var.project_name}-ecs-role"
-  assume_role_policy = data.aws_iam_policy_document.ecs_assume.json
-  tags = {
-    Name = "${var.project_name}-ecs-role"
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "ecs" {
-  role       = aws_iam_role.ecs.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
-data "aws_iam_policy_document" "execution_secrets" {
-  statement {
-    effect    = "Allow"
-    actions   = ["ssm:GetParameters"]
-    resources = [aws_ssm_parameter.django_secret_key.arn]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["secretsmanager:GetSecretValue"]
-    resources = [aws_db_instance.db.master_user_secret[0].secret_arn]
-  }
-}
-
-resource "aws_iam_role_policy" "execution_secrets" {
-  name   = "${var.project_name}-read-secrets"
-  role   = aws_iam_role.ecs.id
-  policy = data.aws_iam_policy_document.execution_secrets.json
 }
 
 resource "aws_ecs_task_definition" "app" {
