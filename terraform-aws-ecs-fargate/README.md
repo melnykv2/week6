@@ -24,11 +24,6 @@ Internet ─80─► ALB (public subnets) ─8000─► Fargate task (private su
 | `outputs.tf` | ECR URL, DB endpoint, DB secret ARN, ALB DNS name |
 | `Dockerfile` | Multi-stage image build (build context = repository root) |
 
-## Prerequisites
-
-- Terraform >= 1.6, AWS CLI v2, Docker
-- AWS credentials configured for the target account
-- Pass `--region us-east-1` to every `aws` command if your shell has a different `AWS_DEFAULT_REGION`
 
 ## Deployment
 
@@ -44,11 +39,9 @@ terraform init
 terraform apply -target=aws_ecr_repository.app
 ```
 
-`-target` creates only the repository. Terraform warns that targeting is for exceptional cases; that is expected here.
-
 ### 2. Build and push the image
 
-Run the build from the **repository root**: the Dockerfile lives in this folder, but it needs the whole app as build context (note the `.` at the end).
+Run the build from the **repository root**:
 
 ```bash
 cd ..
