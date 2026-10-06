@@ -1,4 +1,4 @@
-FROM python:3.13-slim-trixie AS builder
+FROM python:3.13-slim-trixie: AS builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -27,7 +27,7 @@ RUN apt-get update \
     libpq5 \
     libcurl4t64 \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd --system --uid 1000 --no-create-home app
+    && useradd --system --uid 1000 -s /usr/sbin/nologin --no-create-home app
 
 COPY --from=builder /opt/venv /opt/venv
 
@@ -36,7 +36,7 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput && python manage.py compress
 
-USER app
+USER 1000
 
 EXPOSE 8000
 
