@@ -25,6 +25,7 @@ ENV DB=postgres \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     libpq5 \
+    libcurl4t64 \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --system --uid 1000 --no-create-home app
 
