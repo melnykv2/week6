@@ -1,4 +1,12 @@
-FROM python:3.13-trixie@sha256:71d866ed79158f6ff25b096687f90ca706684937ea2032b86e479a060d9eaa7d AS builder
+FROM python:3.13-slim-trixie@sha256:bf44cdfcb76cd3b41e879bc058fc37ec5872002ccfde7fcb765e218cde0cd79c AS builder
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
