@@ -1,4 +1,4 @@
-FROM python:3.13-slim@sha256:bf44cdfcb76cd3b41e879bc058fc37ec5872002ccfde7fcb765e218cde0cd79c AS builder
+FROM python:3.13-slim-trixie@sha256:bf44cdfcb76cd3b41e879bc058fc37ec5872002ccfde7fcb765e218cde0cd79c AS builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -15,7 +15,7 @@ WORKDIR /build
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.13-slim@sha256:bf44cdfcb76cd3b41e879bc058fc37ec5872002ccfde7fcb765e218cde0cd79c
+FROM python:3.13-slim-trixie@sha256:bf44cdfcb76cd3b41e879bc058fc37ec5872002ccfde7fcb765e218cde0cd79c
 
 ENV DB=postgres \
     DEBUG=False \
